@@ -1,3 +1,5 @@
+<img src="assets/FormForgeLogoLandscape.png" alt="FormForge Logo" />
+
 # FormForge
 
 FormForge is a cross-platform form generation toolkit designed for flexible, professional-grade PDF form creation.
