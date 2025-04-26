@@ -42,10 +42,16 @@ FormForge can generate a single form at a time, or batch multiple forms in seque
   "outputFile": "output/invoice_1234.pdf",
   "fields": [
     {
+      "name": "AutomationBarcode",
+      "text": "E311224012345-1",
+      "position": { "x": 300, "y": 50, "rotation": 90 },
+      "font": { "name": "Free3of9", "size": 14, "format": [] }
+    },
+    {
       "name": "CustomerName",
       "text": "John Doe",
       "position": { "x": 100, "y": 700 },
-      "font": { "name": "Helvetica-Bold", "size": 14 }
+      "font": { "name": "Helvetica-Bold", "size": 14, "format": ["underline"] }
     },
     {
       "name": "CustomerAddress",
@@ -61,7 +67,7 @@ FormForge can generate a single form at a time, or batch multiple forms in seque
 
 ## Project Status
 
-- [ ] Project planning
+- [X] Project planning
 - [ ] Base application skeleton
 - [ ] Job file reader
 - [ ] PDF master loader
@@ -70,17 +76,12 @@ FormForge can generate a single form at a time, or batch multiple forms in seque
 - [ ] CLI runner
 - [ ] (Optional) Web UI prototype
 
----
-
-## License
-
-FormForge will likely be released under an open source license once stable. (TBD)
 
 ---
 
 ## Notes
 
-    Designed and built with Kotlin for clean, modern, cross-platform development.
+    Would like to use Kotlin for clean, modern, cross-platform development.
 
     Powered by open-source PDF libraries.
 
