@@ -16,10 +16,11 @@ class IMbBarcode : Barcode() {
         val serialNumber: String,
         val routingNumber: String
     ) {
-        val barcodeIdBytes = BarcodeUtils.binaryStringToByteArray(barcodeId)
-        val serviceTypeIdBytes = BarcodeUtils.binaryStringToByteArray(serviceTypeId)
-        val mailerIdBytes = BarcodeUtils.binaryStringToByteArray(mailerId)
-        val serialNumberBytes = BarcodeUtils.binaryStringToByteArray(serialNumber)
+//        val barcodeIdBytes = BarcodeUtils.binaryStringToByteArray(barcodeId)
+//        val serviceTypeIdBytes = BarcodeUtils.binaryStringToByteArray(serviceTypeId)
+//        val mailerIdBytes = BarcodeUtils.binaryStringToByteArray(mailerId)
+//        val serialNumberBytes = BarcodeUtils.binaryStringToByteArray(serialNumber)
+
 
         fun encode(): ByteArray {
             val routingNumberLength = routingNumber.length
