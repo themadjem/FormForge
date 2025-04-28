@@ -1,6 +1,7 @@
 package com.themadjem.formforge.core.barcode
 
 import org.junit.jupiter.api.Assertions.*
+import java.math.BigInteger
 import kotlin.test.Test
 
 class IMbBarcodeTest {
@@ -14,11 +15,11 @@ class IMbBarcodeTest {
     val encoderTestSample8: IMbBarcode.IMbEncoder = IMbBarcode.IMbEncoder("00","310","123456","123456789","")
 
     @Test
-    fun EncodeRoutingNumberTest(){
-        val expectedValue5 = (12345 + 1).toString()
-        val expectedValue7 = (123451234 + 100_001).toString()
-        val expectedValue9 = (12345123412 + 1_000_100_001).toString()
-        val expectedValue0 = "0"
+    fun encodeRoutingNumberTest(){
+        val expectedValue5 = (12345 + 1).toBigInteger()
+        val expectedValue7 = (123451234 + 100_001).toBigInteger()
+        val expectedValue9 = (12345123412 + 1_000_100_001).toBigInteger()
+        val expectedValue0 = BigInteger.ZERO
 
         assertEquals(expectedValue5,encoderTestSample1.encodeRoutingNumber())
         assertEquals(expectedValue5,encoderTestSample5.encodeRoutingNumber())
@@ -29,4 +30,19 @@ class IMbBarcodeTest {
         assertEquals(expectedValue0,encoderTestSample4.encodeRoutingNumber())
         assertEquals(expectedValue0,encoderTestSample8.encodeRoutingNumber())
     }
+
+    @Test
+    fun encodeTrackingNumberTest(){
+        val expectedValue = "617300654321123456789013"
+        val encodedTracking = encoderTestSample1.encodeTrackingNumber().toString()
+        assertEquals(expectedValue, encodedTracking)
+
+        /*
+        * This test fails
+        * Expected :617300654321123456789013
+        * Actual   :617300310987654321123456
+        * */
+    }
+
+
 }

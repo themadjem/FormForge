@@ -22,29 +22,42 @@ class IMbBarcode : Barcode() {
 //        val serialNumberBytes = BarcodeUtils.binaryStringToByteArray(serialNumber)
 
 
-        fun encode(): ByteArray {
-            val routingNumberLength = routingNumber.length
-            val routingEncoded: String = encodeRoutingNumber()
-            return BarcodeUtils.binaryStringToByteArray("0") //placeholder
+        fun encodeTrackingNumber(): BigInteger {
+            var binaryData: BigInteger = encodeRoutingNumber()
+            val bid0: String = barcodeId.toCharArray()[0].toString()
+            val bid1: String = barcodeId.toCharArray()[1].toString()
+            val tracking: String = "$serviceTypeId$mailerId$serialNumber"
+
+            binaryData = binaryData
+                .multiply(10.toBigInteger())
+                .add(bid0.toBigInteger())
+                .multiply(5.toBigInteger())
+                .add(bid1.toBigInteger())
+
+            for (t in tracking){
+                binaryData = binaryData.multiply(BigInteger.TEN).add(t.toString().toBigInteger())
+            }
+
+            return binaryData
         }
 
-        fun encodeRoutingNumber(): String {
+        fun encodeRoutingNumber(): BigInteger {
             val routingLen = routingNumber.length
             when (routingLen) {
                 0 -> {
-                    return "0"
+                    return BigInteger.ZERO
                 }
 
                 5 -> {
-                    return routingNumber.toBigInteger().add(BigInteger.ONE).toString()
+                    return routingNumber.toBigInteger().add(BigInteger.ONE)
                 }
 
                 9 -> {
-                    return routingNumber.toBigInteger().add(BigInteger.valueOf(100_001)).toString()
+                    return routingNumber.toBigInteger().add(BigInteger.valueOf(100_001))
                 }
 
                 11 -> {
-                    return routingNumber.toBigInteger().add(BigInteger.valueOf(1_000_100_001)).toString()
+                    return routingNumber.toBigInteger().add(BigInteger.valueOf(1_000_100_001))
                 }
 
                 else -> {
@@ -102,4 +115,3 @@ class IMbBarcode : Barcode() {
 
 
 }
-
