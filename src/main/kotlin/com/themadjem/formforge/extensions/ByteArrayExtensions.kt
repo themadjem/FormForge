@@ -90,3 +90,7 @@ fun ByteArray.toBinaryString(): String {
     }
 }
 
+
+fun BigInteger.toHexString(): String {
+    return toString(16)
+}
