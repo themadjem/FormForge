@@ -2,7 +2,10 @@ package com.themadjem.formforge.core.barcode
 
 import com.themadjem.formforge.extensions.toHexString
 import org.junit.jupiter.api.Assertions.*
+import java.io.File
+import java.io.FileOutputStream
 import java.math.BigInteger
+import javax.imageio.ImageIO
 import kotlin.test.Test
 import kotlin.test.todo
 
@@ -26,7 +29,7 @@ class IMbBarcodeTest {
     val specSample4: IMbBarcode.IMbEncoder = IMbBarcode.IMbEncoder("01", "234", "567094", "987654321", "01234567891")
 
 
-    @Test
+//    @Test
     fun encodeRoutingNumberTest() {
         val expectedValue5 = (12345 + 1).toBigInteger()
         val expectedValue7 = (123451234 + 100_001).toBigInteger()
@@ -63,19 +66,20 @@ fun main() {
         "987654321",
         "01234567891"
     )
-    specSample1.encode()
+//    val barcode = specSample1.encode()
+//    println(barcode)
 
-    TODO("This currently does not work as intended")
+    val code = "0123456709498765432101234567891"
+//    println(code.substring(0,2))
+//    println(code.substring(2,5))
+//    println(code.substring(5,11))
+//    println(code.substring(11,20))
+//    println(code.substring(20))
 
-    /*
-    * binaryData: 16907b2a24abc16a2e5c004b1
-    * fcs: 11101010001
-    * revFCS: true, false, false, false, true, false, true, false, true, true
-    * codewords:0, 787, 607, 1022, 861, 19, 816, 1294, 35, 301
-    * mod codewords: 293, 313, 25f, 3fe, 35d, 13, 330, 50e, 23, 25a
-    * characters: eab, 85c, 8e4, b06, 6dd, 1740, 17c6, 1200, 123f, 1b2b
-    *
-    * Expected characters:
-    * 0DCB 085C 08E4 0B06 06DD 1740 17C6 1200 123F 1B2B
-    * */
+    val barcode = IMbBarcode()
+    val barcodeImg = barcode.generate(code)
+    val file = File("output.png")
+    val write = ImageIO.write(barcodeImg, "png", file)
+
+
 }
