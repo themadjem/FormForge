@@ -19,6 +19,10 @@ class IMbBarcode : Barcode() {
         return renderIMb(code)
     }
 
+    fun encodeToDAFT(data:String):String{
+        return IMbEncoder.fromFullCode(data).encode()
+    }
+
     private fun stringToBarTypes(bars: String): List<BarType> {
         return bars.map {
             when (it) {
@@ -59,26 +63,24 @@ class IMbBarcode : Barcode() {
         val horizontalQuietZone = MathUtils.inchesToPixels(0.125f)
         val verticalQuietZone = MathUtils.inchesToPixels(0.028f)
 
-        val barStartF = MathUtils.inchesToPixels(0f)
-        val barStartA = MathUtils.inchesToPixels(0f)
+        val barStartF = MathUtils.inchesToPixels(0.000f)
+        val barStartA = MathUtils.inchesToPixels(0.000f)
         val barStartD = MathUtils.inchesToPixels(0.043f)
         val barStartT = MathUtils.inchesToPixels(0.043f)
 
-        val barWidth = MathUtils.inchesToPixels(0.02f)
+        val barWidth = MathUtils.inchesToPixels(0.020f)
         val barHeightF = MathUtils.inchesToPixels(0.125f)
         val barHeightA = MathUtils.inchesToPixels(0.083f)
         val barHeightD = MathUtils.inchesToPixels(0.083f)
-        val barHeightT = MathUtils.inchesToPixels(0.04f)
+        val barHeightT = MathUtils.inchesToPixels(0.040f)
 
+        val imgWidth = barTypes.size * barWidth + (barTypes.size - 1) * barSpacing + 2 * horizontalQuietZone
+        val imgHeight = barHeightF + (2 * verticalQuietZone)
 
-        val image = BufferedImage(
-            barTypes.size * barWidth + (barTypes.size - 1) * barSpacing + 2 * horizontalQuietZone,
-            barHeightF + (2 * verticalQuietZone),
-            BufferedImage.TYPE_INT_RGB
-        )
+        val image = BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB)
         val g = image.createGraphics()
         g.color = Color.WHITE
-        g.fillRect(0,0,image.width,image.height)
+        g.fillRect(0, 0, image.width, image.height)
         g.color = Color.BLACK
         for ((i, bar) in barTypes.withIndex()) {
             val x = horizontalQuietZone + (i * barWidth) + (i - 1) * barSpacing
@@ -97,25 +99,47 @@ class IMbBarcode : Barcode() {
         return image
     }
 
-//    fun generateIMbSvg(bars:String): String
+    fun generateIMbSvg(bars: String): String {
+        return generateIMbSvg(stringToBarTypes(bars))
+    }
 
     fun generateIMbSvg(barTypes: List<BarType>): String {
-        val barWidth = 2
-        val barHeight = 20
+
+        val barSpacing = MathUtils.inchesToPixels(0.0166f)
+        val horizontalQuietZone = MathUtils.inchesToPixels(0.125f)
+        val verticalQuietZone = MathUtils.inchesToPixels(0.028f)
+
+        val barStartF = MathUtils.inchesToPixels(0.000f)
+        val barStartA = MathUtils.inchesToPixels(0.000f)
+        val barStartD = MathUtils.inchesToPixels(0.043f)
+        val barStartT = MathUtils.inchesToPixels(0.043f)
+
+        val barWidth = MathUtils.inchesToPixels(0.020f)
+        val barHeightF = MathUtils.inchesToPixels(0.125f)
+        val barHeightA = MathUtils.inchesToPixels(0.083f)
+        val barHeightD = MathUtils.inchesToPixels(0.083f)
+        val barHeightT = MathUtils.inchesToPixels(0.040f)
+
+        val imgWidth = barTypes.size * barWidth + (barTypes.size - 1) * barSpacing + 2 * horizontalQuietZone
+        val imgHeight = barHeightF + (2 * verticalQuietZone)
+
+
         val builder = StringBuilder()
-        builder.append("<svg width=\"${barTypes.size * barWidth}\" height=\"$barHeight\" xmlns=\"http://www.w3.org/2000/svg\">\n")
+        builder.append("<svg width=\"$imgWidth\" height=\"$imgHeight\" xmlns=\"http://www.w3.org/2000/svg\">\n")
+        builder.append("<rect x=\"0\" y=\"0\" width=\"$imgWidth\" height=\"$imgHeight\" fill=\"white\"/>\n")
 
         for ((i, bar) in barTypes.withIndex()) {
-            val x = i * barWidth
+            val x = horizontalQuietZone + (i * barWidth) + (i - 1) * barSpacing
             val (y, height) = when (bar) {
-                BarType.FULL -> 0 to barHeight
-                BarType.TRACKER -> barHeight / 2 - 1 to 2
-                BarType.ASCENDER -> 0 to barHeight / 2
-                BarType.DESCENDER -> barHeight / 2 to barHeight / 2
+                BarType.FULL -> barStartF to barHeightF
+                BarType.TRACKER -> barStartT to barHeightT
+                BarType.ASCENDER -> barStartA to barHeightA
+                BarType.DESCENDER -> barStartD to barHeightD
             }
 
-            builder.append("<rect x=\"$x\" y=\"$y\" width=\"$barWidth\" height=\"$height\" fill=\"black\" />\n")
+            builder.append("<rect x=\"$x\" y=\"${y + verticalQuietZone}\" width=\"$barWidth\" height=\"$height\" fill=\"black\" />\n")
         }
+
 
         builder.append("</svg>")
         return builder.toString()

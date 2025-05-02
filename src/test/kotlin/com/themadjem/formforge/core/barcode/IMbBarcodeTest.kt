@@ -77,9 +77,9 @@ fun main() {
 //    println(code.substring(20))
 
     val barcode = IMbBarcode()
-    val barcodeImg = barcode.generate(code)
-    val file = File("output.png")
-    val write = ImageIO.write(barcodeImg, "png", file)
+    val barcodeImg = barcode.generateIMbSvg(barcode.encodeToDAFT(code))
+    val file = File("output.svg")
+    file.writeText(barcodeImg)  //ImageIO.write(barcodeImg, "png", file)
 
 
 }
