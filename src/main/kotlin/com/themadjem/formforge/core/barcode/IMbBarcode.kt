@@ -4,7 +4,9 @@ import com.themadjem.formforge.core.barcode.IMbBarcode.IMbEncoder.BarType
 import com.themadjem.formforge.extensions.toFixedSizeByteArray
 import com.themadjem.formforge.extensions.toHexString
 import com.themadjem.formforge.utils.MathUtils
+import java.awt.Color
 import java.awt.Image
+import java.awt.Stroke
 import java.awt.image.BufferedImage
 import java.awt.image.RenderedImage
 import java.math.BigInteger
@@ -33,30 +35,65 @@ class IMbBarcode : Barcode() {
         return renderIMb(stringToBarTypes(bars))
     }
 
+    /**
+     * Check the spec for barcode properties such as bar width, height, spacing, quiet zones
+     *
+     * Intelligent Mail Barcode 4-State SP
+     * 4/20/2015
+     * Rev H
+     * Page 12 of 60
+     * Figure 6: Physical Dimensions
+     * Vertical dimensions shall be based on the centerline of the barcode, forming an overall barcode height of
+     * 0.125 inch to 0.165 inch. Any vertical jitter shall be contained within the vertical dimensions from the
+     * centerline.
+     * Horizontal dimensions shall be based on the centerline of the individual bars, forming an overall barcode
+     * pitch of 22±2 bars per inch. Individual bars shall be printed with a width of 0.020±0.005 inch. The pitch
+     * and widths shall result in spacing between bars of 0.012 inch to 0.040 inch.
+     * The distance from the lead (left) edge of the 1st (left most) bar to the lead (left) edge of the 65th (right
+     * most) bar shall never be less than 2.667 inches. The distance from the lead (left) edge of the 1st bar (left
+     * most) to the trail (right) edge of the 65th (right most) bar shall never be greater than 3.225 inches.
+     * */
     fun renderIMb(barTypes: List<BarType>): BufferedImage {
 
-        val barWidth = 2
-        val barHeight = 20
-        val image = BufferedImage(barTypes.size * barWidth, barHeight, BufferedImage.TYPE_INT_ARGB)
-        val g = image.createGraphics()
+        val barSpacing = MathUtils.inchesToPixels(0.0166f)
+        val horizontalQuietZone = MathUtils.inchesToPixels(0.125f)
+        val verticalQuietZone = MathUtils.inchesToPixels(0.028f)
 
+        val barStartF = MathUtils.inchesToPixels(0f)
+        val barStartA = MathUtils.inchesToPixels(0f)
+        val barStartD = MathUtils.inchesToPixels(0.043f)
+        val barStartT = MathUtils.inchesToPixels(0.043f)
+
+        val barWidth = MathUtils.inchesToPixels(0.02f)
+        val barHeightF = MathUtils.inchesToPixels(0.125f)
+        val barHeightA = MathUtils.inchesToPixels(0.083f)
+        val barHeightD = MathUtils.inchesToPixels(0.083f)
+        val barHeightT = MathUtils.inchesToPixels(0.04f)
+
+
+        val image = BufferedImage(
+            barTypes.size * barWidth + (barTypes.size - 1) * barSpacing + 2 * horizontalQuietZone,
+            barHeightF + (2 * verticalQuietZone),
+            BufferedImage.TYPE_INT_RGB
+        )
+        val g = image.createGraphics()
+        g.color = Color.WHITE
+        g.fillRect(0,0,image.width,image.height)
+        g.color = Color.BLACK
         for ((i, bar) in barTypes.withIndex()) {
-            val x = i * barWidth
+            val x = horizontalQuietZone + (i * barWidth) + (i - 1) * barSpacing
             val (y, height) = when (bar) {
-                BarType.FULL -> 0 to barHeight
-                BarType.TRACKER -> barHeight / 2 - 1 to 2
-                BarType.ASCENDER -> 0 to barHeight / 2
-                BarType.DESCENDER -> barHeight / 2 to barHeight / 2
+                BarType.FULL -> barStartF to barHeightF
+                BarType.TRACKER -> barStartT to barHeightT
+                BarType.ASCENDER -> barStartA to barHeightA
+                BarType.DESCENDER -> barStartD to barHeightD
             }
 
-            g.fillRect(x, y, barWidth, height)
+            g.fillRect(x, y + verticalQuietZone, barWidth, height)
         }
 
         g.dispose()
-        TODO("This code generates garbage looking images, this was AI generated, needs work")
-        /*
-        * Check the spec for barcode properties such as bar width, height, spacing, quiet zones
-        * */
+
         return image
     }
 
@@ -83,7 +120,6 @@ class IMbBarcode : Barcode() {
         builder.append("</svg>")
         return builder.toString()
     }
-
 
 
     @ExperimentalUnsignedTypes

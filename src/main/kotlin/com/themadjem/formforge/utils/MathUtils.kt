@@ -1,5 +1,7 @@
 package com.themadjem.formforge.utils
 
+import kotlin.math.roundToInt
+
 object MathUtils {
     fun ReverseUnsignedInt16(input: UInt): UInt {
         var reverse = 0u;
@@ -10,5 +12,9 @@ object MathUtils {
             num = num shr 1
         }
         return reverse;
+    }
+
+    fun inchesToPixels(inches: Float, dpi:Int = 300): Int{
+        return (inches * dpi).roundToInt()
     }
 }
