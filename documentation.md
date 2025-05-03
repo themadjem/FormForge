@@ -225,8 +225,19 @@ referenced with the absolute path as a string.
 
 ### FormForge Ore & Ingot
 
-An `.ore` file is a proprietary text-based format. The format is designed to use less data than the JSON `.ffj` files and
+An `.ore` file is a proprietary text-based format. The format is designed to use less data than the JSON `.ffj` files
+and
 can be compressed into an `.ingot` file to be more space efficient.
 
 An `.ingot` file is an `.ore` file which has been compressed using gzip.
 
+##### Example
+
+<div style="text-align:right">BatchJobExample.ore</div>
+
+```
+\\ORESTART
+000001</home/formforge/template/invoice.pdf\\&\D01=E311224000001-1\F01=Free3of9|14\X01=300\Y10=50\R01=90\D02=John Doe\F02=Helvetica-Bold|14|ul\X02=100\Y02=700\\
+000002</home/formforge/template/invoice.pdf\\&\D01=E311224000002-1\F01=Free3of9|14\X01=300\Y10=50\R01=90\D02=Jane Doe\F02=Helvetica-Bold|14|ul\X02=100\Y02=700\\
+\\ORESTOP
+```
