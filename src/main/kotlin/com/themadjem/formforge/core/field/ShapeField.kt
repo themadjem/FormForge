@@ -1,4 +1,4 @@
-package com.themadjem.formforge.core
+package com.themadjem.formforge.core.field
 
 import org.apache.pdfbox.pdmodel.PDPage
 
