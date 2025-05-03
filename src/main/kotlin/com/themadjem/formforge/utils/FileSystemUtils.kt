@@ -1,8 +1,18 @@
 package com.themadjem.formforge.utils
 
+import java.awt.FileDialog
+import java.awt.Frame
 import java.io.File
 
 object FileSystemUtils {
+
+    val imagesDirectory: File
+        get() = File(getAppDataDir(), "images")
+
+    val setupsDirectory: File
+        get() = File(getAppDataDir(), "setups")
+
+
     fun getAppDataDir(): File {
         val userHome = System.getProperty("user.home")
         val os = System.getProperty("os.name").lowercase()
@@ -31,6 +41,17 @@ object FileSystemUtils {
             File(path)
         } else {
             getResource("images", path)
+        }
+    }
+
+    fun selectFile(title: String = "Select File", startingDirectory: String? = null): File? {
+        val fileDialog = FileDialog(Frame())
+        fileDialog.title = title
+        fileDialog.directory = startingDirectory
+        fileDialog.isVisible = true
+        return when {
+            fileDialog.file.isNullOrEmpty() -> null
+            else -> File(fileDialog.file)
         }
     }
 }

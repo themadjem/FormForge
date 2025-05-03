@@ -1,5 +1,6 @@
 package com.themadjem.formforge.core.field
 
+import com.themadjem.formforge.core.barcode.BarcodeType
 import org.apache.pdfbox.pdmodel.PDPage
 
 class ShapeField (

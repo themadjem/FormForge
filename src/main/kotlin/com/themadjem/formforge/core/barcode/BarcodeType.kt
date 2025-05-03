@@ -1,4 +1,4 @@
-package com.themadjem.formforge.core.field
+package com.themadjem.formforge.core.barcode
 
 enum class BarcodeType {
     UPC, // ISO/IEC 15420 Universal Product Code
