@@ -9,6 +9,7 @@ import javax.imageio.ImageIO
 import kotlin.test.Test
 import kotlin.test.todo
 
+@ExperimentalUnsignedTypes
 class IMbBarcodeTest {
     val encoderTestSample1: IMbBarcode.IMbEncoder = IMbBarcode.IMbEncoder("00", "310", "987654321", "123456", "12345")
     val encoderTestSample2: IMbBarcode.IMbEncoder =
@@ -29,7 +30,7 @@ class IMbBarcodeTest {
     val specSample4: IMbBarcode.IMbEncoder = IMbBarcode.IMbEncoder("01", "234", "567094", "987654321", "01234567891")
 
 
-//    @Test
+    @Test
     fun encodeRoutingNumberTest() {
         val expectedValue5 = (12345 + 1).toBigInteger()
         val expectedValue7 = (123451234 + 100_001).toBigInteger()
@@ -51,35 +52,38 @@ class IMbBarcodeTest {
         val expectedValue = "617300310987654321123456"
         val encodedTracking = encoderTestSample1.encodeTrackingNumber().toString()
         assertEquals(expectedValue, encodedTracking)
+    }
+
+    @Test
+    fun encodeToDAFT1() {
+        val payloadData1 = "01234567094987654321"
+        val expectedBarcode1 = "ATTFATTDTTADTAATTDTDTATTDAFDDFADFDFTFFFFFTATFAAAATDFFTDAADFTFDTDT"
+        val encodedDAFT1 = IMbBarcode().encodeToDAFT(payloadData1)
+        assertEquals(expectedBarcode1, encodedDAFT1)
+    }
+
+    @Test
+    fun encodeToDAFT2() {
+        val payloadData2 = "0123456709498765432101234"
+        val expectedBarcode2 = "DTTAFADDTTFTDTFTFDTDDADADAFADFATDDFTAAAFDTTADFAAATDFDTDFADDDTDFFT"
+        val encodedDAFT2 = IMbBarcode().encodeToDAFT(payloadData2)
+        assertEquals(expectedBarcode2, encodedDAFT2)
+    }
+
+    @Test
+    fun encodeToDAFT3() {
+        val payloadData3 = "01234567094987654321012345678"
+        val expectedBarcode3 = "ADFTTAFDTTTTFATTADTAAATFTFTATDAAAFDDADATATDTDTTDFDTDATADADTDFFTFA"
+        val encodedDAFT3 = IMbBarcode().encodeToDAFT(payloadData3)
+        assertEquals(expectedBarcode3, encodedDAFT3)
+    }
+
+    @Test
+    fun encodeToDAFT4() {
+        val payloadData4 = "0123456709498765432101234567891"
+        val expectedBarcode4 = "AADTFFDFTDADTAADAATFDTDDAAADDTDTTDAFADADDDTFFFDDTTTADFAAADFTDAADA"
+        val encodedDAFT4 = IMbBarcode().encodeToDAFT(payloadData4)
+        assertEquals(expectedBarcode4, encodedDAFT4)
 
     }
-}
-
-
-/*For testing only*/
-@OptIn(ExperimentalUnsignedTypes::class)
-fun main() {
-    val specSample1: IMbBarcode.IMbEncoder = IMbBarcode.IMbEncoder(
-        "01",
-        "234",
-        "567094",
-        "987654321",
-        "01234567891"
-    )
-//    val barcode = specSample1.encode()
-//    println(barcode)
-
-    val code = "0123456709498765432101234567891"
-//    println(code.substring(0,2))
-//    println(code.substring(2,5))
-//    println(code.substring(5,11))
-//    println(code.substring(11,20))
-//    println(code.substring(20))
-
-    val barcode = IMbBarcode()
-    val barcodeImg = barcode.generateIMbSvg(barcode.encodeToDAFT(code))
-    val file = File("output.svg")
-    file.writeText(barcodeImg)  //ImageIO.write(barcodeImg, "png", file)
-
-
 }

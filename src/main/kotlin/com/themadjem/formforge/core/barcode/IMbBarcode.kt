@@ -19,7 +19,7 @@ class IMbBarcode : Barcode() {
         return renderIMb(code)
     }
 
-    fun encodeToDAFT(data:String):String{
+    fun encodeToDAFT(data: String): String {
         return IMbEncoder.fromFullCode(data).encode()
     }
 
@@ -188,17 +188,26 @@ class IMbBarcode : Barcode() {
         fun encode(): String {
             val binaryData = encodeTrackingNumber()
             val fcs = generateCRC11FrameCheckSequence(binaryData.toFixedSizeByteArray(13))
-            val revFCS = (fcs and 1023).toString(2).reversed().toCharArray().map { it.toString().equals("1") }
+            val revFCS = (fcs and 1023)
+                .toString(2)
+                .padStart(11, '0')
+                .reversed()
+                .toCharArray()
+                .map { it.toString() == "1" }
+
             val codewords = generateCodewords(binaryData)
+
+//            println("BID: $barcodeId,SID: $serviceTypeId, MID: $mailerId, SER: $serialNumber, Routing: $routingNumber")
 //
 //            print("binaryData: ")
-//            println(binaryData.toHexString())
+//            println(binaryData.toHexString().uppercase().padStart(26, '0'))
 //            print("fcs: ")
-//            println(fcs.toString(2))
+//            println(fcs.toString(16))
 //            print("revFCS: ")
 //            println(revFCS.joinToString())
 //            print("codewords:")
-//            println(codewords.joinToString(transform = { it.toString(16).uppercase().padStart(4, '0') }))
+////            println(codewords.joinToString(transform = { it.toString(16).uppercase().padStart(4, '0') }))
+//            println(codewords.joinToString(transform = { it.toString(10) }, separator = " "))
 
             val tab5 = initializeNof13(5u, 1287)
             val tab2 = initializeNof13(2u, 78)
@@ -206,15 +215,32 @@ class IMbBarcode : Barcode() {
             val bat2 = initializeInvertedTable(tab2)
 
             codewords[9] *= 2
-            if (fcs.toString(2).toCharArray()[0] == '1') {
+            if (fcs.toString(2).padStart(11, '0').toCharArray()[0] == '1') {
                 codewords[0] += 659
             }
 
+//
+//            println(
+//                "mod cw: ${
+//                    codewords.joinToString(transform = {
+//                        it.toString(10)
+//                    }, separator = " ")
+//                }"
+//            )
+
+//
+//            println(
+//                codewords.joinToString(
+//                    transform = { it.toString(16).uppercase().padStart(4, '0') },
+//                    separator = " "
+//                )
+//            )
+//
 //            println(
 //                "mod codewords: ${
 //                    codewords.joinToString(transform = {
 //                        it.toString(16).uppercase().padStart(4, '0')
-//                    })
+//                    }, separator = " ")
 //                }"
 //            )
 
@@ -234,11 +260,13 @@ class IMbBarcode : Barcode() {
 //                "characters: ${
 //                    characters.joinToString(transform = {
 //                        it.toString(16).uppercase().padStart(4, '0')
-//                    })
+//                    }, separator = " ")
 //                }"
 //            )
+            val bars = convertCharactersToBars(characters)
+//            println("Barcode: $bars")
 
-            return convertCharactersToBars(characters)
+            return bars
         }
 
 
