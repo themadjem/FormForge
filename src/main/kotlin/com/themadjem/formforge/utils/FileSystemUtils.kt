@@ -24,7 +24,7 @@ object FileSystemUtils {
         }
     }
 
-    fun getResource(subdirectory: String, filename: String): File {
+    fun getAppDataResource(subdirectory: String, filename: String): File {
         val appdata = getAppDataDir()
         val subDir = File(appdata, subdirectory)
         if (!subDir.exists()) {
@@ -40,7 +40,7 @@ object FileSystemUtils {
         return if (path.matches(Regex.fromLiteral("(^\\w:)|(^\\\\\\\\)|(^\\/)"))) {
             File(path)
         } else {
-            getResource("images", path)
+            getAppDataResource("images", path)
         }
     }
 
