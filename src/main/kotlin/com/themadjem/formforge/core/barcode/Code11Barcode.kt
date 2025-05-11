@@ -1,5 +1,6 @@
 package com.themadjem.formforge.core.barcode
 
+import com.themadjem.formforge.utils.FileSystemUtils
 import com.themadjem.formforge.utils.MathUtils
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -10,19 +11,19 @@ class Code11Barcode : Barcode() {
         return renderC11(encode(data))
     }
 
-    val STARTSTOP = "1011001"
+    val STARTSTOP = "10110010"
     val dataMap = mapOf<String, String>(
-        Pair("0", "101011"),
-        Pair("1", "1101011"),
-        Pair("2", "1001011"),
-        Pair("3", "1100101"),
-        Pair("4", "1011011"),
-        Pair("5", "1101101"),
-        Pair("6", "1001101"),
-        Pair("7", "1010011"),
-        Pair("8", "1101001"),
-        Pair("9", "110101"),
-        Pair("-", "101101"),
+        Pair("0", "1010110"),
+        Pair("1", "11010110"),
+        Pair("2", "10010110"),
+        Pair("3", "11001010"),
+        Pair("4", "10110110"),
+        Pair("5", "11011010"),
+        Pair("6", "10011010"),
+        Pair("7", "10100110"),
+        Pair("8", "11010010"),
+        Pair("9", "1101010"),
+        Pair("-", "1011010"),
     )
 
     fun encode(data: String): String {
