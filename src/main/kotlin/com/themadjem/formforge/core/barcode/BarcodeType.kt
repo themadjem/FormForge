@@ -3,6 +3,7 @@ package com.themadjem.formforge.core.barcode
 enum class BarcodeType {
     UPC, // ISO/IEC 15420 Universal Product Code
     EAN, // ISO/IEC 15420 European Article Number
+    Code11, // Intermec Code 11
     Code39, // ISO/IEC 16388:2007 Code 39
     Code128, // ISO/IEC 15417 Code 128
     Code25, // ISO/IEC 16390 Interleaved 2 of 5

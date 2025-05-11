@@ -2,7 +2,9 @@ package com.themadjem.formforge.utils
 
 import java.awt.FileDialog
 import java.awt.Frame
+import java.awt.image.RenderedImage
 import java.io.File
+import javax.imageio.ImageIO
 
 object FileSystemUtils {
 
@@ -53,5 +55,10 @@ object FileSystemUtils {
             fileDialog.file.isNullOrEmpty() -> null
             else -> File(fileDialog.file)
         }
+    }
+
+    fun saveImageAsFile(image: RenderedImage, filename: String){
+        val file = File(imagesDirectory,filename)
+        ImageIO.write(image, file.extension, file)
     }
 }
